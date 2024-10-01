@@ -35,16 +35,16 @@ router.get('/:movieId', async(req, res) => {
 })
 // define the about route
 router.post('/create', async(req, res) => {
-  const { title, description } = req.body;
-  console.log(title, description)
+  const { title, description, rating_kp, rating_imdb, premiere_date, countries, persons, genres} = req.body;
+  
 
   if (!title || !description) {
     return res.status(400).send('Предоставьте данные');
   }
   try{
     const result = await pool.query(
-      'INSERT INTO movies (title, description) VALUES ($1, $2) RETURNING *',
-      [title, description]
+      'INSERT INTO movies (title, description, rating_kp, rating_imdb, premiere_date, countries, persons, genres) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+      [title, description, rating_kp, rating_imdb, premiere_date, countries, persons, genres]
     );
      res.status(201).json(result.rows[0])
   } catch(err) {
