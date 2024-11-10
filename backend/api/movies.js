@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const { pool } = require('../bd/bd.js');
+const pool = require('../bd/pool')
 
 // middleware that is specific to this router
 // router.use(function timeLog(req, res, next) {
@@ -35,7 +35,7 @@ router.get('/:movieId', async(req, res) => {
 })
 // define the about route
 router.post('/create', async(req, res) => {
-  const { title, description, rating_kp, rating_imdb, premiere_date, countries, persons, genres} = req.body;
+  const {kp_id, title, description, rating_kp, rating_imdb, premiere_date, countries, persons,director, genres} = req.body;
   
 
   if (!title || !description) {
@@ -43,8 +43,8 @@ router.post('/create', async(req, res) => {
   }
   try{
     const result = await pool.query(
-      'INSERT INTO movies (title, description, rating_kp, rating_imdb, premiere_date, countries, persons, genres) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-      [title, description, rating_kp, rating_imdb, premiere_date, countries, persons, genres]
+      'INSERT INTO movies (kp_id, title, description, rating_kp, rating_imdb, premiere_date, countries, persons, director, genres) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
+      [kp_id, title, description, rating_kp, rating_imdb, premiere_date, countries, persons, director, genres]
     );
      res.status(201).json(result.rows[0])
   } catch(err) {
